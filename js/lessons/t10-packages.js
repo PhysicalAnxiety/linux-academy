@@ -1,0 +1,116 @@
+(function () {
+  const LX = globalThis.LX;
+  const { T, H, P, STORY, TIP, WARN, FUN, BIG, CMD, TABLE, ANAT, PRE, THINK, STEPS, TRY } = LX.b;
+  const { mcq, cmd } = LX.Q;
+  const M = LX.M;
+
+  LX.topics.push({
+    id: 'packages',
+    no: 10,
+    key: 'apt',
+    mins: 30,
+    title: T('Software, Archives and the System', 'Software, Archives aur System'),
+    blurb: T('Install apps with one command, pack folders into tidy archives and check the health of your machine.', 'Ek command se apps install karo, folders ko tidy archives mein pack karo aur machine ki sehat check karo.'),
+    blocks: [
+      BIG(
+        'On Linux you rarely download installers from websites. You ask a **package manager** to fetch software for you from a trusted online store called a **repository**. On Ubuntu and Debian the package manager is **apt**.',
+        'Linux par tum aksar websites se installers download nahi karte. Tum **package manager** se kehte ho ki wo ek bharose-mand online store, jise **repository** kehte hain, se software le aaye. Ubuntu aur Debian par package manager **apt** hai.'
+      ),
+      STORY('Imagine a huge, safe toy shop run by the school. You hand a slip with the toy name to the shopkeeper (apt). He checks the shelves, brings the toy and any batteries it needs (dependencies), and puts it in your bag. When you want to give it back, he takes it and cleans up.', 'Socho school ki taraf se chalne wali ek badi, safe khilone ki dukaan. Tum dukaandaar (apt) ko khilone ke naam ki parchi dete ho. Wo shelves dekhta hai, khilona aur uske liye zaroori batteries (dependencies) laata hai aur tumhare bag mein rakh deta hai. Wapas dena ho to wo le leta hai aur saaf-safai kar deta hai.'),
+      H('The apt commands', 'apt ki commands'),
+      TABLE(
+        [
+          ['sudo apt update', 'refresh the shop catalogue (do this first)', 'dukaan ka catalogue refresh karo (ye pehle karo)'],
+          ['sudo apt upgrade', 'update everything you already have', 'jo kuch tumhare paas hai sab update karo'],
+          ['sudo apt install tree', 'install the program called tree', 'tree naam ka program install karo'],
+          ['sudo apt remove tree', 'uninstall it', 'use uninstall karo'],
+          ['apt search word', 'search the catalogue', 'catalogue mein search karo'],
+          ['apt show tree', 'read the description of a package', 'package ka description padho'],
+        ],
+        'Command',
+        'Command'
+      ),
+      P('Installing and removing change the whole system, so they need **sudo**. Searching does not. Try installing without sudo first to see the error.', 'Install aur remove poore system ko badalte hain, isliye **sudo** chahiye. Search ko nahi. Pehle bina sudo ke install karke error dekho.'),
+      CMD('apt install tree', 'Permission denied: only root can change the installed software.', 'Permission denied: sirf root installed software badal sakta hai.'),
+      CMD('tree', 'And the tree command is not installed yet, so Linux even suggests how to get it.', 'Aur tree command abhi installed nahi hai, to Linux khud batata hai ki use kaise lein.'),
+      CMD('sudo apt update', 'Refreshes the list of available software.', 'Available software ki list refresh karta hai.'),
+      CMD('sudo apt install -y tree', 'Installs it. The -y answers "yes" to the question "Do you want to continue?" so it does not stop and wait.', 'Install karta hai. -y "Do you want to continue?" sawaal ka jawab "yes" de deta hai taaki wo ruke nahi.'),
+      CMD('tree -L 2 Documents', 'It works now! tree draws a folder as a tree. -L 2 means "only two levels deep".', 'Ab ye chal gaya! tree folder ko ped ki tarah banata hai. -L 2 matlab "sirf do level gehra".'),
+      TRY('Search the shop and have some fun:', 'Dukaan mein search karo aur thoda maza karo:', ['apt search cow', 'sudo apt install -y cowsay', 'cowsay Namaste from Linux', 'apt list --installed']),
+      TIP('apt shows the exact name of packages. Package names and command names are usually the same, but not always. For example the package fortune-mod gives the command fortune.', 'apt packages ke sahi naam dikhata hai. Package aur command ke naam aksar same hote hain, par hamesha nahi. Jaise package fortune-mod se command fortune milti hai.'),
+      H('Archives: tar, gzip and zip', 'Archives: tar, gzip aur zip'),
+      P('To send a whole folder in one piece you pack it into one file, an **archive**. **tar** bundles many files into one, and **gzip** (the **z** option) squeezes it smaller. The result is a .tar.gz file, often called a "tarball".', 'Poora folder ek hi tukde mein bhejne ke liye use ek file, ek **archive**, mein pack karte hain. **tar** kai files ko ek mein bandhta hai, aur **gzip** (**z** option) use chhota nichod deta hai. Natija ek .tar.gz file hai, jise aksar "tarball" kehte hain.'),
+      ANAT([
+        ['tar', 'cmd', 'the archiver', 'archive banane wala'],
+        ['-czvf', 'opt', 'c = create, z = gzip, v = verbose (show names), f = file name comes next', 'c = banao, z = gzip, v = verbose (naam dikhao), f = agla shabd file ka naam hai'],
+        ['pics.tar.gz', 'arg', 'the archive to make', 'jo archive banana hai'],
+        ['Pictures', 'arg', 'what to pack', 'kya pack karna hai'],
+      ]),
+      CMD(['tar -czvf pics.tar.gz Pictures', 'ls -lh pics.tar.gz'], 'Creates the archive and lists what went in. Compare its size with the originals.', 'Archive banata hai aur dikhata hai kya kya gaya. Uska size originals se compare karo.'),
+      CMD('tar -tf pics.tar.gz', 'Peek inside without unpacking: t = list.', 'Bina kholne ke andar jhaanko: t = list.'),
+      CMD(['mkdir restore', 'tar -xzvf pics.tar.gz -C restore', 'ls restore'], 'x = extract. -C restore means "unpack into the folder restore".', 'x = extract. -C restore matlab "restore folder ke andar kholo".'),
+      TABLE([
+        ['tar -czvf a.tar.gz dir', 'pack and compress', 'pack aur compress karo'],
+        ['tar -xzvf a.tar.gz', 'unpack', 'kholo'],
+        ['tar -tf a.tar.gz', 'list the contents', 'andar ki list dekho'],
+        ['gzip file / gunzip file.gz', 'compress / decompress one file', 'ek file compress / decompress karo'],
+        ['zip -r a.zip dir', 'make a .zip (works on Windows too)', '.zip banao (Windows par bhi chalta hai)'],
+        ['unzip a.zip', 'open a .zip', '.zip kholo'],
+      ]),
+      FUN('Remember the letters like a sentence: **c**reate **z**ipped **v**erbose **f**ile, or e**x**tract **z**ipped **v**erbose **f**ile.', 'Akshar ek vakya ki tarah yaad rakho: **c**reate **z**ipped **v**erbose **f**ile, ya e**x**tract **z**ipped **v**erbose **f**ile.'),
+      H('How big is it? du and df', 'Kitna bada hai? du aur df'),
+      CMD('du -sh Downloads', 'du = disk usage. -s gives one total, -h makes it readable. Which folder is the big one?', 'du = disk usage. -s ek total deta hai, -h ise padhne layak banata hai. Kaun sa folder bada hai?'),
+      CMD('df -h', 'How full is each disk? Look at the Use% column.', 'Har disk kitni bhari hai? Use% column dekho.'),
+      H('System information', 'System ki jaankari'),
+      TABLE([
+        ['uname -a', 'kernel and system info', 'kernel aur system ki jaankari'],
+        ['cat /etc/os-release', 'which Linux distribution is this?', 'ye kaun si Linux distribution hai?'],
+        ['lsb_release -a', 'the same, in a tidy format', 'wahi, saaf format mein'],
+        ['hostname -I', 'the IP address', 'IP address'],
+        ['uptime', 'how long it has been on', 'kitne samay se on hai'],
+        ['free -h', 'memory', 'memory'],
+      ]),
+      H('Services: systemctl', 'Services: systemctl'),
+      P('Programs that run quietly in the background all the time, like web servers, are called **services**. **systemctl** controls them.', 'Jo programs hamesha chupchap background mein chalte hain, jaise web servers, unhe **services** kehte hain. **systemctl** unhe control karta hai.'),
+      CMD('systemctl status ssh', 'Is the SSH service active (running)?', 'Kya SSH service active (running) hai?'),
+      TABLE([
+        ['systemctl status name', 'is it running?', 'kya wo chal rahi hai?'],
+        ['sudo systemctl start name', 'start it now', 'abhi shuru karo'],
+        ['sudo systemctl stop name', 'stop it now', 'abhi roko'],
+        ['sudo systemctl restart name', 'stop and start again', 'roko aur dobara shuru karo'],
+        ['sudo systemctl enable name', 'start automatically at boot', 'boot hote hi apne aap shuru ho'],
+      ]),
+      CMD(['sudo apt install -y nginx', 'systemctl status nginx'], 'nginx is a web server. After installing it starts running as a service.', 'nginx ek web server hai. Install hone ke baad wo service ki tarah chalne lagta hai.'),
+      WARN('Run `sudo apt update` before installing, so you get the newest versions. And only install from the official repositories unless you really trust the source.', 'Install karne se pehle `sudo apt update` chalao, taaki naye versions mile. Aur jab tak source par poora bharosa na ho, sirf official repositories se install karo.'),
+      THINK('why did  apt install tree  fail but  apt search tree  work?', ' apt install tree  fail kyun hua par  apt search tree  chal gaya?', 'Searching only reads the catalogue, which anyone may do. Installing changes the system, which needs administrator rights, so you need sudo.', 'Search sirf catalogue padhta hai, jo koi bhi kar sakta hai. Install system badalta hai, jiske liye administrator rights chahiye, isliye sudo chahiye.'),
+      H('Cheat sheet', 'Cheat sheet'),
+      TABLE([
+        ['sudo apt update', 'refresh the catalogue', 'catalogue refresh karo'],
+        ['sudo apt install -y pkg', 'install', 'install karo'],
+        ['sudo apt remove pkg', 'uninstall', 'uninstall karo'],
+        ['tar -czvf x.tar.gz dir', 'make a tarball', 'tarball banao'],
+        ['tar -xzvf x.tar.gz', 'unpack it', 'use kholo'],
+        ['du -sh dir', 'size of a folder', 'folder ka size'],
+        ['df -h', 'disk space', 'disk space'],
+        ['systemctl status svc', 'is the service running?', 'kya service chal rahi hai?'],
+      ]),
+    ],
+    missions: [
+      M('pkg-m1', 'Install a tool', 'Ek tool install karo', 'Install the tree program: update first if you like, then use apt install with sudo. Add -y so it does not ask.', 'tree program install karo: chaho to pehle update karo, phir sudo ke saath apt install use karo. -y lagao taaki wo na poochhe.', 'sudo apt install -y tree', 'sudo apt install -y tree', (sh) => sh.installed.has('tree'), ['sudo apt install -y tree']),
+      M('pkg-m2', 'Pack the pictures', 'Pictures pack karo', 'Pack the Pictures folder into a compressed archive called pics.tar.gz.', 'Pictures folder ko pics.tar.gz naam ke compressed archive mein pack karo.', 'tar -czvf pics.tar.gz Pictures', 'tar -czvf pics.tar.gz Pictures', (sh) => { const n = sh.stat('~/pics.tar.gz'); return !!n && !!n.archive && n.archive.gz && n.archive.items.some((i) => /cat\.png/.test(i.path)); }, ['tar -czvf pics.tar.gz Pictures']),
+      M('pkg-m3', 'Disk detective', 'Disk jasoos', 'Find out how big the Downloads folder is with du, in human-readable form.', 'du se pata karo ki Downloads folder kitna bada hai, padhne layak form mein.', 'du -sh Downloads', 'du -sh Downloads', (sh) => sh.log.some((r) => /^\s*du\b/.test(r.cmd) && /Downloads/.test(r.cmd) && /\d+M/.test(r.out)), ['du -sh Downloads']),
+    ],
+    quiz: [
+      mcq(1, 'What is apt?', 'apt kya hai?', ['A package manager for installing software', 'A text editor', 'A web browser', 'A game'], 0, 'apt installs, updates and removes software packages.', 'apt software packages install, update aur remove karta hai.'),
+      mcq(2, 'Why do you need sudo for apt install?', 'apt install ke liye sudo kyun chahiye?', ['Installing changes the whole system', 'apt is slow', 'sudo makes it free', 'It is only a habit'], 0, 'Only the administrator may change installed software.', 'Sirf administrator hi installed software badal sakta hai.'),
+      mcq(3, 'What is a .tar.gz file?', '.tar.gz file kya hoti hai?', ['A picture', 'A compressed bundle of files', 'A video', 'A program'], 1, 'tar bundles files together and gzip compresses the bundle.', 'tar files ko ek saath bandhta hai aur gzip us bundle ko compress karta hai.'),
+      cmd(4, 'Refresh the list of available packages (as administrator).', 'Available packages ki list refresh karo (administrator ki tarah).', { verify: (sh, r, c) => /^\s*sudo\s+apt(-get)?\s+update/.test(c) && r.out.includes('Reading package lists'), sample: 'sudo apt update', wrong: ['apt update'], hintEn: 'sudo, apt, update.', hintHi: 'sudo, apt, update.' }, 'apt update downloads the latest catalogue. Without sudo it fails.', 'apt update naya catalogue download karta hai. sudo ke bina fail hota hai.'),
+      cmd(5, 'Install cowsay without being asked to confirm.', 'Bina confirm poochhe cowsay install karo.', { verify: (sh, r, c) => sh.installed.has('cowsay') && /(\s-y\b|--yes|assume-yes|-\w*y\w*\b)/.test(c), sample: 'sudo apt install -y cowsay', wrong: ['sudo apt install cowsay'], hintEn: 'The -y option answers yes for you.', hintHi: '-y option tumhari taraf se yes bol deta hai.' }, 'Without -y, apt stops and asks Do you want to continue?', '-y ke bina apt rukta hai aur poochta hai Do you want to continue?'),
+      cmd(6, 'Show the free disk space in human-readable units.', 'Free disk space ko human-readable units mein dikhao.', { verify: (sh, r, c) => /^\s*df\b/.test(c) && r.out.includes('/dev/sda1') && /\d+G/.test(r.out), sample: 'df -h', wrong: ['df'], hintEn: 'df and the human option.', hintHi: 'df aur human option.' }, 'df -h shows each disk with sizes like 25G.', 'df -h har disk ko 25G jaise sizes ke saath dikhata hai.'),
+      cmd(7, 'cowsay is already installed. Make the cow say Moo.', 'cowsay pehle se installed hai. Cow se Moo bulwao.', { setup: ['sudo apt install -y cowsay'], verify: (sh, r, c) => /^\s*cowsay\b/.test(c) && r.out.includes('Moo') && r.out.includes('^__^'), sample: 'cowsay Moo', hintEn: 'The command is the name of the package.', hintHi: 'Command ka naam package ka naam hi hai.' }, 'cowsay draws a cow with a speech bubble.', 'cowsay ek cow aur speech bubble banata hai.'),
+      cmd(8, 'In ONE line, pack Documents into docs.tar.gz and then list the contents of that archive.', 'EK line mein Documents ko docs.tar.gz mein pack karo aur phir us archive ki contents list karo.', { verify: (sh, r) => sh.isFile('docs.tar.gz') && r.out.includes('Documents/report.md'), sample: 'tar -czf docs.tar.gz Documents && tar -tf docs.tar.gz', alt: ['tar -czvf docs.tar.gz Documents && tar -tf docs.tar.gz', 'tar -czvf docs.tar.gz Documents; tar -tzf docs.tar.gz'], hintEn: 'Create with c, list with t. Join with &&.', hintHi: 'c se banao, t se list karo. && se jodo.' }, 'c creates, t lists. Both need f and the archive name.', 'c banata hai, t list karta hai. Dono ko f aur archive ka naam chahiye.'),
+      cmd(9, 'docs.tar.gz exists and a folder called restore exists. Unpack the archive INTO restore.', 'docs.tar.gz maujood hai aur restore naam ka folder maujood hai. Archive ko restore ke ANDAR kholo.', { setup: ['tar -czf docs.tar.gz Documents', 'mkdir restore'], verify: (sh) => sh.isFile('restore/Documents/report.md'), sample: 'tar -xzf docs.tar.gz -C restore', alt: ['tar -xzvf docs.tar.gz -C restore'], hintEn: 'x extracts and -C picks the destination folder.', hintHi: 'x kholta hai aur -C destination folder chunta hai.' }, '-C restore tells tar to change into that folder before extracting.', '-C restore tar ko batata hai ki kholne se pehle us folder mein jao.'),
+      cmd(10, 'Boss level: in ONE line install nginx and then show that its service is running.', 'Boss level: EK line mein nginx install karo aur phir dikhao ki uski service chal rahi hai.', { verify: (sh, r) => sh.installed.has('nginx') && r.out.includes('active (running)'), sample: 'sudo apt install -y nginx && systemctl status nginx', alt: ['sudo apt install -y nginx; systemctl status nginx'], hintEn: 'Install, then ask systemctl for the status.', hintHi: 'Install karo, phir systemctl se status pucho.' }, 'Packages with a service start automatically. systemctl status confirms active (running).', 'Service wale packages apne aap shuru ho jate hain. systemctl status active (running) confirm karta hai.'),
+    ],
+  });
+})();
